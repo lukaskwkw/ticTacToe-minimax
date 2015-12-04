@@ -48,7 +48,7 @@ $(document).ready(function(){
 		for (var i = 1; i < arr.length; i++) {
 			if (checkWinner(clonedMatrix,cpu).length===3)
 			{
-				j=arr[i]
+				j=arr[i];
 				console.log("Koniec: ", j)
 				break;
 			}
