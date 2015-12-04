@@ -1,0 +1,46 @@
+$a: 40rem;
+
+.row {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: $a;
+	width: $a;
+	margin-top: ($a/2*(-1));
+	margin-left: ($a/2*(-1));
+	@media (max-width: 30rem)
+	{
+		$a: 30rem;
+		height: $a;
+		width: $a;
+		margin-top: ($a/2*(-1));
+		margin-left: ($a/2*(-1));
+	}
+	// margin: 0 auto;
+}
+.col-xs-4
+{
+	text-align: center;
+	color: black;
+	height: (100%/3);
+	// width: (100%/3); 
+	background-color: #FFF;
+	border: 1px solid black;
+}
+.modal-body{
+	text-align: center;
+}
+
+.sign {
+$signSize: 8rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	// height:  $signSize;
+	// width: $signSize;
+	margin-top: -($signSize/2);
+	margin-left: -($signSize/2)+2;
+	// background-color: #aaa;
+	font-size: $signSize;
+	line-height: $signSize;
+}
