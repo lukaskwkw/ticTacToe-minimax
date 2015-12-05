@@ -23,7 +23,7 @@ $(document).ready(function(){
 			var vector = checkWinner(board,player);
 			if(vector.length===3)
 			{			
-				zaznaczZwyciezce(vector,"green");
+				highlightWinner(vector,"green");
 				isEnd = true;
 				mainModal.modal('show',1500);
 
@@ -102,7 +102,7 @@ $(document).ready(function(){
 		if(vector.length===3){
 			alert("You lose!")
 			isEnd = true;
-			zaznaczZwyciezce(vector,"red");
+			highlightWinner(vector,"red");
 			mainModal.modal('show',1500);
 			return;
 		}
@@ -112,7 +112,7 @@ $(document).ready(function(){
 		}
 	}
 
-	function zaznaczZwyciezce (vector,color) {
+	function highlightWinner (vector,color) {
 		for (var i = 0; i < vector.length; i++) {
 			$('#'+vector[i]).css("background-color",color);
 			// console.log(vector[i]);
@@ -121,35 +121,40 @@ $(document).ready(function(){
 
 	function minimax (matrix,turn) {
 		var sign='';
-		var resultTable = [];
 		var arr = getEmptySpaces(matrix);
-		var nT=0;
+		var arrLen = arr.length;
 		if (turn===1){
-			nT=0;
 			sign=cpu;
-			for (var i = 0; i < arr.length; i++) {
+			var max = -1; //set the lowest possible value eventually it's get bigger
+			for (var i = 0; i <arrLen; i++) {
 				var clonedMatrix = cloneMatrix(matrix);
 				clonedMatrix[arr[i]] = sign;
 				var current = result(clonedMatrix,turn);
 				if (current===1)
 					return 1;
-				resultTable.push(current);
+				if (current>max) // if current result is greater than prev max
+				{				
+					max = current; //set max to current
+				}
 			};
-			return Math.max.apply(null,resultTable);
+			return max;
 
 		}
 		else{
-			nT=1;
 			sign=player;
-			for (var i = 0; i < arr.length; i++) {
+			var min = 1; //set the biggest possible value eventually it's get smaller
+			for (var i = 0; i <arrLen; i++) {
 				var clonedMatrix = cloneMatrix(matrix);
 				clonedMatrix[arr[i]] = sign;
 				var current = result(clonedMatrix,turn);
 				if (current===-1)
 					return -1;
-				resultTable.push(current)
+				if (current<min)
+				{
+					min = current;
+				}
 			};
-			return Math.min.apply(null,resultTable);
+			return min;
 
 		}
 	}
@@ -187,9 +192,9 @@ $(document).ready(function(){
 
 
 	function cloneMatrix (matrix) {
-	// console.log("a");
 	var clonedMatrix = [];
-	for (var i = 0; i < matrix.length; i++) {
+	var matrixLen = matrix.length;
+	for (var i = 0; i < matrixLen; i++) {
 		clonedMatrix.push(matrix[i]);
 	};
 	return clonedMatrix;
@@ -197,7 +202,8 @@ $(document).ready(function(){
 
 function getEmptySpaces(matrix) {
 	var array = [];
-	for (var i=0; i< matrix.length; i++)
+	var matrixLen = matrix.length;
+	for (var i=0; i< matrixLen; i++)
 		if (isEmpty(matrix,i))
 			array.push(i)	
 		return array;
