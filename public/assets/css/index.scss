@@ -1,5 +1,23 @@
 $a: 40rem;
 
+.fade {
+	    transition: opacity 1.5s linear;
+}
+
+.modal-body {
+		@media (max-height: 320px)
+	{
+    h2,label{
+      float: left;
+      margin: 1rem;
+    }
+	}
+}
+
+.modal-body{
+	text-align: center;
+}
+
 .row {
 	position: absolute;
 	top: 50%;
@@ -8,9 +26,21 @@ $a: 40rem;
 	width: $a;
 	margin-top: ($a/2*(-1));
 	margin-left: ($a/2*(-1));
-	@media (max-width: 30rem)
+	@media (max-width: 640px) 
 	{
+		position:relative;
 		$a: 30rem;
+		height: $a;
+		width: $a;
+		margin-top: ($a/2*(-1));
+		margin-left: ($a/2*(-1));
+	}
+
+//for landscape in codepen.io
+	@media (max-height: 320px)
+	{
+		position:absolute;
+		$a: 24rem;
 		height: $a;
 		width: $a;
 		margin-top: ($a/2*(-1));
@@ -18,7 +48,7 @@ $a: 40rem;
 	}
 	// margin: 0 auto;
 }
-.col-xs-4
+.space
 {
 	text-align: center;
 	color: black;
@@ -27,9 +57,23 @@ $a: 40rem;
 	background-color: #FFF;
 	border: 1px solid black;
 }
-.modal-body{
-	text-align: center;
+.game-scores{
+	margin: .5rem 3rem;
 }
+.game-scores__headline {
+	font-size: 5rem;
+	@media (max-width: 640px)
+	{
+		font-size: 2rem;
+	}
+}
+
+.game-scores__score{
+	text-align: center;
+	display: block;
+	font-size: 4rem;
+}
+
 
 .sign {
 $signSize: 8rem;

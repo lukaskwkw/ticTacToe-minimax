@@ -2,6 +2,7 @@ var compTurn = true; //default option
 var player = 'x'; //default option
 var cpu = 'o'; //default option
 var isEnd= false;
+var lost=0,draw=0;
 
 var board = ["","","",
 "","","",
@@ -13,7 +14,16 @@ $(document).ready(function(){
 	$('.col-xs-4').on("click",playerTurn);
 	var mainModal = $("#playerSelection");
 	mainModal.modal('show');
-	$(".btn-who-start").on("click",selectPlayer);
+	mainModal.on('hidden.bs.modal',selectPlayer);
+	$(".btn-who-start").on("click",function () {
+		if ($(this).attr('id') == "me")
+			compTurn = false;
+		else
+		{
+			compTurn=true;
+		}
+		mainModal.modal('hide');
+	});
 
 	function playerTurn (argument) {
 		if (compTurn===false && isEmpty(board,$(this).attr('id')) && isEnd===false)
@@ -25,13 +35,14 @@ $(document).ready(function(){
 			{			
 				highlightWinner(vector,"green");
 				isEnd = true;
-				mainModal.modal('show',1500);
+				mainModal.modal('show');
 
 				return;
 			}
 			if (getEmptySpaces(board).length===0){
-				alert("Tie!");
-				mainModal.modal('show',1500);
+				$(".js-draw").html(++draw);
+				mainModal.find('.modal-title').html("It's Draw! Play again?");
+				mainModal.modal('show');
 			}
 			compTurn=true;
 			computerTurn(board);
@@ -39,6 +50,8 @@ $(document).ready(function(){
 	}
 
 	function computerTurn (matrix) {
+		if (compTurn===false)
+			return;
 		var arr = getEmptySpaces(matrix);
 		//At begining (when cpu starts) every space have equal chance
 		//(there is no better or worse move) so there is no need for
@@ -100,15 +113,17 @@ $(document).ready(function(){
 	function checkFinalState () {
 		var vector = checkWinner(board,cpu);
 		if(vector.length===3){
-			alert("You lose!")
 			isEnd = true;
 			highlightWinner(vector,"red");
-			mainModal.modal('show',1500);
+			mainModal.find('.modal-title').html("You lose! Play again?");
+			mainModal.modal('show');
+			$(".js-lost").html(++lost);
 			return;
 		}
 		if (getEmptySpaces(board).length===0){
-			alert("Tie!");
-			mainModal.modal('show',1500);
+			$(".js-draw").html(++draw);
+			mainModal.find('.modal-title').html("It's Draw! Play again?");
+			mainModal.modal('show');
 		}
 	}
 
@@ -192,65 +207,58 @@ $(document).ready(function(){
 
 
 	function cloneMatrix (matrix) {
-	var clonedMatrix = [];
-	var matrixLen = matrix.length;
-	for (var i = 0; i < matrixLen; i++) {
-		clonedMatrix.push(matrix[i]);
-	};
-	return clonedMatrix;
-}
-
-function getEmptySpaces(matrix) {
-	var array = [];
-	var matrixLen = matrix.length;
-	for (var i=0; i< matrixLen; i++)
-		if (isEmpty(matrix,i))
-			array.push(i)	
-		return array;
+		var clonedMatrix = [];
+		var matrixLen = matrix.length;
+		for (var i = 0; i < matrixLen; i++) {
+			clonedMatrix.push(matrix[i]);
+		};
+		return clonedMatrix;
 	}
 
-	function isEmpty(matrix,i) {
-		if (matrix[i]!=="")
-			return false;
-		else
-			return true;
-	}
+	function getEmptySpaces(matrix) {
+		var array = [];
+		var matrixLen = matrix.length;
+		for (var i=0; i< matrixLen; i++)
+			if (isEmpty(matrix,i))
+				array.push(i)	
+			return array;
+		}
 
-	function selectPlayer () {
-		board = ["","","",
-		"","","",
-		"","",""];
-		$(".col-xs-4").html("").css("background-color","white");
-		isEnd= false;
-		if ($("#x").hasClass("active")===true){
-			player = "x";
-			cpu = "o";
+		function isEmpty(matrix,i) {
+			if (matrix[i]!=="")
+				return false;
+			else
+				return true;
 		}
-		else{
-			player = "o";
-			cpu = "x";
-		}
-		if ($(this).attr('id') == "me")
-			compTurn = false;
-		else
-		{
-			compTurn=true;
+
+		function selectPlayer () {
+			board = ["","","",
+			"","","",
+			"","",""];
+			$(".col-xs-4").html("").css("background-color","white");
+			isEnd= false;
+			if ($("#x").hasClass("active")===true){
+				player = "x";
+				cpu = "o";
+			}
+			else{
+				player = "o";
+				cpu = "x";
+			}
+
 			computerTurn(board);
 		}
 
-		mainModal.modal('hide');
-	}
-
-	function checkWinner(matrix, player) {
-		var horizontal = checkHorizontal(matrix,player);
-		if (horizontal.length===3)
-			return horizontal;
-		var vertical = checkVertical(matrix,player);
-		if (vertical.length===3)
-			return vertical;
-		var diagonal = checkDiagonal(matrix,player);
-		if (diagonal.length===3)
-			return diagonal;
+		function checkWinner(matrix, player) {
+			var horizontal = checkHorizontal(matrix,player);
+			if (horizontal.length===3)
+				return horizontal;
+			var vertical = checkVertical(matrix,player);
+			if (vertical.length===3)
+				return vertical;
+			var diagonal = checkDiagonal(matrix,player);
+			if (diagonal.length===3)
+				return diagonal;
 		return []; // if there is no winner return empty array
 	}
 

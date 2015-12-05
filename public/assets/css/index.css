@@ -1,3 +1,14 @@
+.fade {
+  transition: opacity 1.5s linear; }
+
+@media (max-height: 320px) {
+  .modal-body h2, .modal-body label {
+    float: left;
+    margin: 1rem; } }
+
+.modal-body {
+  text-align: center; }
+
 .row {
   position: absolute;
   top: 50%;
@@ -6,22 +17,41 @@
   width: 40rem;
   margin-top: -20rem;
   margin-left: -20rem; }
-  @media (max-width: 30rem) {
+  @media (max-width: 640px) {
     .row {
+      position: relative;
       height: 30rem;
       width: 30rem;
       margin-top: -15rem;
       margin-left: -15rem; } }
+  @media (max-height: 320px) {
+    .row {
+      position: absolute;
+      height: 24rem;
+      width: 24rem;
+      margin-top: -12rem;
+      margin-left: -12rem; } }
 
-.col-xs-4 {
+.space {
   text-align: center;
   color: black;
   height: 33.33333%;
   background-color: #FFF;
   border: 1px solid black; }
 
-.modal-body {
-  text-align: center; }
+.game-scores {
+  margin: .5rem 3rem; }
+
+.game-scores__headline {
+  font-size: 5rem; }
+  @media (max-width: 640px) {
+    .game-scores__headline {
+      font-size: 2rem; } }
+
+.game-scores__score {
+  text-align: center;
+  display: block;
+  font-size: 4rem; }
 
 .sign {
   position: absolute;
