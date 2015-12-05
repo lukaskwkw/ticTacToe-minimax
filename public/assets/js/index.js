@@ -10,7 +10,12 @@ var board = ["","","",
 
 $(document).ready(function(){
 
-	$('.col-xs-4').on("click",function(){
+	$('.col-xs-4').on("click",playerTurn);
+	var mainModal = $("#playerSelection");
+	mainModal.modal('show');
+	$(".btn-who-start").on("click",selectPlayer);
+
+	function playerTurn (argument) {
 		if (compTurn===false && isEmpty(board,$(this).attr('id')) && isEnd===false)
 		{		
 			$(this).html("<span class='sign'>"+player+"</span>");
@@ -29,32 +34,52 @@ $(document).ready(function(){
 				mainModal.modal('show',1500);
 			}
 			compTurn=true;
-			ruchKomputera(board);
+			computerTurn(board);
 		}
-	});
-	var mainModal = $("#playerSelection");
-	mainModal.modal('show');
-	$(".btn-who-start").on("click",selectPlayer);
+	}
 
-	function ruchKomputera (matrix) {
+	function computerTurn (matrix) {
 		var arr = getEmptySpaces(matrix);
+		//At begining (when cpu starts) every space have equal chance
+		//(there is no better or worse move) so there is no need for
+		//evaluate every pool
+		if (arr.length===9)
+		{
+			var num = selectRandom(0,8);
+			board[num]=cpu;
+			$("#"+num).html("<span class='sign'>"+cpu+"</span>");
+			compTurn=false;
+			return;
+		}
 		if (arr.length===0)
 			return;
 		var max=0;
 		var j = arr[0];
 		var clonedMatrix = cloneMatrix(matrix);
 		clonedMatrix[arr[0]] = cpu;
+
+		if (checkWinner(clonedMatrix,cpu).length===3)
+		{
+			j=arr[0];
+			board[j]=cpu;
+			$("#"+j).html("<span class='sign'>"+cpu+"</span>");
+			compTurn=false;
+			checkFinalState();
+			return;
+		}
+
 		max = minimax(clonedMatrix,0);	
+		// console.log(max,arr[0]);
 		for (var i = 1; i < arr.length; i++) {
+			clonedMatrix = cloneMatrix(matrix);
+			clonedMatrix[arr[i]] = cpu;
 			if (checkWinner(clonedMatrix,cpu).length===3)
 			{
 				j=arr[i];
-				console.log("Koniec: ", j)
 				break;
 			}
-			clonedMatrix = cloneMatrix(matrix);
-			clonedMatrix[arr[i]] = cpu;
 			var tmp = minimax(clonedMatrix,0);
+			// console.log(tmp,arr[i]);
 			if (tmp>max)
 			{
 				max=tmp;
@@ -65,7 +90,14 @@ $(document).ready(function(){
 		$("#"+j).html("<span class='sign'>"+cpu+"</span>");
 		compTurn=false;
 
+		checkFinalState();
 
+	}
+	function selectRandom(min,max) {
+		return Math.floor(Math.random()*(max-min+1))+min;
+	}
+
+	function checkFinalState () {
 		var vector = checkWinner(board,cpu);
 		if(vector.length===3){
 			alert("You lose!")
@@ -83,7 +115,7 @@ $(document).ready(function(){
 	function zaznaczZwyciezce (vector,color) {
 		for (var i = 0; i < vector.length; i++) {
 			$('#'+vector[i]).css("background-color",color);
-			console.log(vector[i]);
+			// console.log(vector[i]);
 		};
 	}
 
@@ -98,7 +130,10 @@ $(document).ready(function(){
 			for (var i = 0; i < arr.length; i++) {
 				var clonedMatrix = cloneMatrix(matrix);
 				clonedMatrix[arr[i]] = sign;
-				resultTable.push(result(clonedMatrix,turn))
+				var current = result(clonedMatrix,turn);
+				if (current===1)
+					return 1;
+				resultTable.push(current);
 			};
 			return Math.max.apply(null,resultTable);
 
@@ -109,7 +144,10 @@ $(document).ready(function(){
 			for (var i = 0; i < arr.length; i++) {
 				var clonedMatrix = cloneMatrix(matrix);
 				clonedMatrix[arr[i]] = sign;
-				resultTable.push(result(clonedMatrix,turn))
+				var current = result(clonedMatrix,turn);
+				if (current===-1)
+					return -1;
+				resultTable.push(current)
 			};
 			return Math.min.apply(null,resultTable);
 
@@ -191,7 +229,7 @@ function getEmptySpaces(matrix) {
 		else
 		{
 			compTurn=true;
-			ruchKomputera(board);
+			computerTurn(board);
 		}
 
 		mainModal.modal('hide');
