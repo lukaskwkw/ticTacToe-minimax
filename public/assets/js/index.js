@@ -1,6 +1,6 @@
 var compTurn = true; //default option
-var player = 'x'; //default option
-var cpu = 'o'; //default option
+var player = "x"; //default option
+var cpu = "o"; //default option
 var isEnd= false;
 var lost=0,draw=0;
 
@@ -11,38 +11,38 @@ var board = ["","","",
 
 $(document).ready(function(){
 
-	$('.col-xs-4').on("click",playerTurn);
+	$(".col-xs-4").on("click",playerTurn);
 	var mainModal = $("#playerSelection");
-	mainModal.modal('show');
-	mainModal.on('hidden.bs.modal',selectPlayer);
+	mainModal.modal("show");
+	mainModal.on("hidden.bs.modal",selectPlayer);
 	$(".btn-who-start").on("click",function () {
-		if ($(this).attr('id') == "me")
+		if ($(this).attr("id") == "me")
 			compTurn = false;
 		else
 		{
 			compTurn=true;
 		}
-		mainModal.modal('hide');
+		mainModal.modal("hide");
 	});
 
-	function playerTurn (argument) {
-		if (compTurn===false && isEmpty(board,$(this).attr('id')) && isEnd===false)
+	function playerTurn () {
+		if (compTurn===false && isEmpty(board,$(this).attr("id")) && isEnd===false)
 		{		
 			$(this).html("<span class='sign'>"+player+"</span>");
-			board[$(this).attr('id')] = player;
+			board[$(this).attr("id")] = player;
 			var vector = checkWinner(board,player);
 			if(vector.length===3)
 			{			
 				highlightWinner(vector,"green");
 				isEnd = true;
-				mainModal.modal('show');
+				mainModal.modal("show");
 
 				return;
 			}
 			if (getEmptySpaces(board).length===0){
 				$(".js-draw").html(++draw);
-				mainModal.find('.modal-title').html("It's Draw! Play again?");
-				mainModal.modal('show');
+				mainModal.find(".modal-title").html("It's Draw! Play again?");
+				mainModal.modal("show");
 			}
 			compTurn=true;
 			computerTurn(board);
@@ -115,27 +115,27 @@ $(document).ready(function(){
 		if(vector.length===3){
 			isEnd = true;
 			highlightWinner(vector,"red");
-			mainModal.find('.modal-title').html("You lose! Play again?");
-			mainModal.modal('show');
+			mainModal.find(".modal-title").html("You lose! Play again?");
+			mainModal.modal("show");
 			$(".js-lost").html(++lost);
 			return;
 		}
 		if (getEmptySpaces(board).length===0){
 			$(".js-draw").html(++draw);
-			mainModal.find('.modal-title').html("It's Draw! Play again?");
-			mainModal.modal('show');
+			mainModal.find(".modal-title").html("It's Draw! Play again?");
+			mainModal.modal("show");
 		}
 	}
 
 	function highlightWinner (vector,color) {
 		for (var i = 0; i < vector.length; i++) {
-			$('#'+vector[i]).css("background-color",color);
+			$("#"+vector[i]).css("background-color",color);
 			// console.log(vector[i]);
 		};
 	}
 
 	function minimax (matrix,turn) {
-		var sign='';
+		var sign="";
 		var arr = getEmptySpaces(matrix);
 		var arrLen = arr.length;
 		if (turn===1){
